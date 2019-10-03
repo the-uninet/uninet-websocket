@@ -48,7 +48,6 @@ class Server {
     private readonly _console_error: (x: string) => void
     constructor(config: {
         listening_port: number,
-        url: string,
         console_log?: (x: string) => void,
         console_error?: (x: string) => void,
     }) {
@@ -56,13 +55,10 @@ class Server {
         this._console_log = config.console_log == null ? ((x) => console.log(x)) : config.console_log
         this._console_error = config.console_error == null ? ((x) => console.error(x)) : config.console_error
         this._port = config.listening_port
-        this._self_url = config.url
         this._router = {}
         this._all_servers = new Set()
 
-        this._all_servers.add(this._self_url)
-
-        this._console_log(`Uninet Server starting... port="${this._port}" url="${this._self_url}"`)
+        this._console_log(`Uninet Server starting... port="${this._port}"`)
 
         new websocket.Server({ port: this._port }).on('connection', ws => {
             ws.on('message', raw_msg => (async function() {
