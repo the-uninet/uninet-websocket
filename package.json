@@ -8,8 +8,7 @@
     "typescript": "^3.6.3"
   },
   "scripts": {
-    "build": "tsc",
-    "serve": "node ./dist/index.js"
+    "build": "tsc"
   },
   "name": "uninet-websocket",
   "version": "0.0.0",
