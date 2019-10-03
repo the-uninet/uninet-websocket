@@ -41,7 +41,6 @@ function LowAddressStr2LowAddress(x: LowAddressStr): LowAddress {
 
 class Server {
     private readonly _port: number
-    private readonly _self_url: string
     private readonly _router: { [k: string]: Set<LowAddressStr> }
     private readonly _all_servers: Set<LowAddressStr>
     private readonly _console_log: (x: string) => void
