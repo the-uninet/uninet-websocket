@@ -10,5 +10,12 @@
   "scripts": {
     "build": "tsc",
     "serve": "node ./dist/index.js"
-  }
+  },
+  "name": "uninet-websocket",
+  "version": "0.0.0",
+  "description": "Uninet/WebSocket",
+  "main": "dist/index.js",
+  "repository": "https://github.com/the-uninet/uninet-websocket.git",
+  "author": "zaoqi <zaomir@outlook.com>",
+  "license": "AGPL-3.0-or-later"
 }

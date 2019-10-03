@@ -5,6 +5,7 @@
     "types" : ["@types/node"],
     "newLine": "lf",
     "target": "es6",
-    "module": "commonjs"
+    "module": "commonjs",
+    "incremental": true
   }
 }
