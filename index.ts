@@ -22,8 +22,9 @@ function LowAddressStr2LowAddress(x:LowAddressStr):LowAddress{
   return ["wss", x.slice(6)]
 }
 
-function new_server(port: number, self_websocket_url: string):void{
+function new_server(port: number, self_websocket_url: string, {console_log = (x)=>console.log(x), console_error = (x)=>console.error(x)}={}):void{
 
+  console_log(`Uninet Server starting... port="${port}" url="${self_websocket_url}"`)
   const router: { [k: string]: Set<LowAddressStr> } = {}
   function router_get(addr:string):Set<LowAddressStr>|undefined {
     return router[addr]
@@ -48,7 +49,7 @@ function new_server(port: number, self_websocket_url: string):void{
         for(const x of msg[1]){
           assert(Array.isArray(x) && x.length===2 && (x[0]==='ws' || x[0]==='wss') && typeof x[1] === 'string')
           const addr:LowAddressStr=`${x[0]}://${x[1]}`
-          console.log(`Servers: add ${addr}`)
+          console_log(`Servers: add ${addr}`)
           all_servers.add(addr)
         }
       }else if(type===PacketType.GetServers){
@@ -67,7 +68,7 @@ function new_server(port: number, self_websocket_url: string):void{
       }else{
         assert(false)
       }
-    })().catch(e=>console.error(e)))
+    })().catch(console_error))
   })
 
 }
