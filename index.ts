@@ -61,10 +61,11 @@ class Server {
         this._console_log(`Uninet Server starting... port="${this._port}"`)
 
         new websocket.Server({ port: this._port }).on('connection', ws => {
-            ws.on('message', raw_msg => (async function() {
-                const msg: any = JSON.parse((Array.isArray(raw_msg)?Buffer.concat(raw_msg):Buffer.from(raw_msg as any)).toString())
-                assert(Array.isArray(msg) && msg.length > 0)
-                const type: PacketType = msg[0]
+            ws.on('message', raw_msg => {
+                raw_msg = JSON.parse((Array.isArray(raw_msg) ? Buffer.concat(raw_msg) : Buffer.from(raw_msg as any)).toString())
+                assert(Array.isArray(raw_msg) && raw_msg.length > 0)
+                const msg: Array<any> = raw_msg as any
+                const type: any = msg[0]
                 if (type === PacketType.Servers) {
                     assert(msg.length === 2 && Array.isArray(msg[1]))
                     for (const x of msg[1]) {
@@ -81,24 +82,43 @@ class Server {
                 } else if (type === PacketType.RoutingTable) {
                     throw 'WIP'
                 } else if (type === PacketType.GetRoutingTable) {
-                    throw 'WIP'
+                    assert(msg.length === 1)
+                    ws.send(JSON.stringify([PacketType.RoutingTable, this._router]))
                 } else if (type === PacketType.ProxyMe) {
                     throw 'WIP'
                 } else if (type === PacketType.Packet) {
-                    throw 'WIP'
+                    assert(msg.length === 4 && typeof msg[1] === 'string')
+                    if (this._proxying_get(msg[1]).size !== 0) {
+                        throw 'WIP'
+                    } else if (this._router_get(msg[1]).size !== 0) {
+                        throw 'WIP'
+                    } else {
+                        throw 'WIP'
+                    }
                 } else {
                     assert(false)
                 }
-            })().catch(this._console_error))
+            })
             ws.on('close', () => {
                 throw 'WIP'
             })
         })
     }
 
+    private _proxying_get(addr: string): Set<websocket> {
+        const r = this._proxying_list[addr]
+        return r == null ? new Set() : r
+    }
+    private _proxying_add(addr: string, ws: websocket): void {
+        if (this._proxying_list[addr] === void 0) {
+            this._proxying_list[addr] = new Set()
+        }
+        this._proxying_list[addr].add(ws)
+    }
 
-    private _router_get(addr: string): Set<LowAddressStr> | undefined {
-        return this._router[addr]
+    private _router_get(addr: string): Set<LowAddressStr> {
+        const r = this._router[addr]
+        return r == null ? new Set() : r
     }
     private _router_add(addr: string, low_addr: LowAddressStr): void {
         if (this._router[addr] === void 0) {
