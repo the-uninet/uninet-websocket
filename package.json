@@ -5,10 +5,12 @@
   },
   "devDependencies": {
     "@types/node": "^12.7.9",
-    "typescript": "^3.6.3"
+    "typescript": "^3.6.3",
+    "typescript-formatter": "^7.2.2"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "format": "tsfmt --replace"
   },
   "name": "uninet-websocket",
   "version": "0.0.0",
