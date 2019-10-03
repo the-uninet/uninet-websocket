@@ -14,7 +14,7 @@
 */
 const UninetAddress = require('uninet-address')
 const assert = require('assert').strict
-const websocket = require('ws')
+import * as websocket from 'ws'
 
 const enum PacketType {
     Servers,
@@ -41,8 +41,9 @@ function LowAddressStr2LowAddress(x: LowAddressStr): LowAddress {
 
 class Server {
     private readonly _port: number
-    private readonly _router: { [k: string]: Set<LowAddressStr> }
+    private readonly _router: { [k: string/*Address*/]: Set<LowAddressStr> }
     private readonly _all_servers: Set<LowAddressStr>
+    private readonly _proxying_list: { [k: string/*Address*/]: Set<websocket> }
     private readonly _console_log: (x: string) => void
     private readonly _console_error: (x: string) => void
     constructor(config: {
@@ -61,7 +62,7 @@ class Server {
 
         new websocket.Server({ port: this._port }).on('connection', ws => {
             ws.on('message', raw_msg => (async function() {
-                const msg: any = JSON.parse(raw_msg)
+                const msg: any = JSON.parse((Array.isArray(raw_msg)?Buffer.concat(raw_msg):Buffer.from(raw_msg as any)).toString())
                 assert(Array.isArray(msg) && msg.length > 0)
                 const type: PacketType = msg[0]
                 if (type === PacketType.Servers) {
@@ -89,6 +90,9 @@ class Server {
                     assert(false)
                 }
             })().catch(this._console_error))
+            ws.on('close', () => {
+                throw 'WIP'
+            })
         })
     }
 

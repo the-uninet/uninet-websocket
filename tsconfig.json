@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "sourceMap": true,
-    "types" : ["@types/node"],
+    "types" : ["@types/node","@types/ws"],
     "newLine": "lf",
     "target": "esnext",
     "module": "commonjs",
