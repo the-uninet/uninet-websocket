@@ -4,7 +4,7 @@
     "sourceMap": true,
     "types" : ["@types/node"],
     "newLine": "lf",
-    "target": "es6",
+    "target": "esnext",
     "module": "commonjs",
     "incremental": true
   }
