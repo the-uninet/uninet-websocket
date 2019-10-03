@@ -47,16 +47,16 @@ class Server {
     private readonly _console_log: (x: string) => void
     private readonly _console_error: (x: string) => void
     constructor(config: {
-        port: number,
-        self_websocket_url: string,
+        listening_port: number,
+        url: string,
         console_log?: (x: string) => void,
         console_error?: (x: string) => void,
     }) {
 
         this._console_log = config.console_log == null ? ((x) => console.log(x)) : config.console_log
         this._console_error = config.console_error == null ? ((x) => console.error(x)) : config.console_error
-        this._port = config.port
-        this._self_url = config.self_websocket_url
+        this._port = config.listening_port
+        this._self_url = config.url
         this._router = {}
         this._all_servers = new Set()
 
